@@ -20,8 +20,16 @@ image_path = "path_to_your_image.jpg"
 # Getting the base64 string
 base64_image = encode_image(image_path)
 
+if base64_image is None:
+    print("Image encoding failed. Exiting.")
+    sys.exit(1)
+
 # Retrieve the API key from environment variables
-api_key = os.environ["MISTRAL_API_KEY"]
+api_key = os.environ.get("MISTRAL_API_KEY")
+
+if api_key is None:
+    print("Error: MISTRAL_API_KEY environment variable not set.")
+    sys.exit(1)
 
 # Specify model
 model = "pixtral-12b-2409"
@@ -47,10 +55,13 @@ messages = [
 ]
 
 # Get the chat response
-chat_response = client.chat.complete(
-    model=model,
-    messages=messages
-)
-
-# Print the content of the response
-print(chat_response.choices[0].message.content)
+try:
+    chat_response = client.chat.complete(
+        model=model,
+        messages=messages
+    )
+    # Print the content of the response
+    print(chat_response.choices[0].message.content)
+except Exception as e:
+    print(f"Error: {e}")
+    sys.exit(1)
