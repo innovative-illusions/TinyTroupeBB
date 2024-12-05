@@ -1,5 +1,6 @@
 import base64
 import os
+import sys
 from mistralai import Mistral
 
 def encode_image(image_path):
